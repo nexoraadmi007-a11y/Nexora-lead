@@ -1,0 +1,67 @@
+NEXORA CONTENT ENGINE v3
+========================
+
+SYSTEM OVERVIEW
+---------------
+Self-improving content + performance intelligence system.
+Generates viral scripts → tracks platform metrics → scores content → learns → adapts.
+
+DAILY FLOW
+----------
+9:00 AM  →  python content_engine.py morning
+             Generates Video 1 (Problem/Insight) + Video 2 (Demo/Conversion)
+             Sends full scripts to Telegram (Word-ready format)
+
+4:00 PM  →  python content_engine.py afternoon
+             Sends check-in to team: posted? comments? WhatsApp leads?
+             Team replies: posted=yes comments=X leads=X
+
+9:00 PM  →  python content_engine.py evening [leads_count]
+             Pulls Meta + TikTok metrics
+             Scores each post (out of 100)
+             Identifies top + weak post
+             Generates AI insight + action for tomorrow
+             Saves all data to Google Sheets
+             Sends performance report to Telegram
+
+SCORING SYSTEM (out of 100)
+----------------------------
+Reach Score        20 pts  →  views + reach vs baseline
+Engagement Score   30 pts  →  likes, comments (x2), shares (x3), saves (x2)
+Retention Proxy    20 pts  →  saves + shares as watch-completion signal
+Conversion Score   30 pts  →  WhatsApp leads received
+
+CLASSIFICATIONS
+---------------
+80–100  →  SCALE    (replicate aggressively)
+60–79   →  OPTIMIZE (tweak hook or CTA)
+40–59   →  WEAK     (rethink format)
+<40     →  DROP     (kill the concept)
+
+MODULES
+-------
+content/script_generator.py    →  Claude API → daily viral scripts
+content/performance_tracker.py →  Meta Graph API + TikTok API metrics
+content/content_scorer.py      →  Scores posts 0–100
+content/learning_engine.py     →  Pattern analysis + AI insight
+content/sheets_manager.py      →  Google Sheets history
+
+REQUIRED .env KEYS
+------------------
+TELEGRAM_BOT_TOKEN
+TELEGRAM_CHAT_ID
+OWNER_CHAT_ID
+CLAUDE_API_KEY
+GOOGLE_SHEETS_ID
+GOOGLE_SHEETS_CREDENTIALS_PATH
+
+META_ACCESS_TOKEN
+META_INSTAGRAM_ACCOUNT_ID
+META_FACEBOOK_PAGE_ID
+
+TIKTOK_ACCESS_TOKEN
+TIKTOK_OPEN_ID
+
+CONTENT CTA (never change)
+--------------------------
+Send 'SYSTEM' on WhatsApp
