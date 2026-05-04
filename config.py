@@ -3,10 +3,14 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# ── Telegram ──────────────────────────────────────────────────────────────────
+# ── Telegram (Lead Bot) ───────────────────────────────────────────────────────
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID   = os.getenv("TELEGRAM_CHAT_ID")
 OWNER_CHAT_ID      = os.getenv("OWNER_CHAT_ID", TELEGRAM_CHAT_ID)
+
+# ── Telegram (Content Engine Bot) ─────────────────────────────────────────────
+CONTENT_BOT_TOKEN  = os.getenv("CONTENT_BOT_TOKEN", os.getenv("TELEGRAM_BOT_TOKEN"))
+CONTENT_CHAT_ID    = os.getenv("CONTENT_CHAT_ID", os.getenv("TELEGRAM_CHAT_ID"))
 
 # ── Claude ────────────────────────────────────────────────────────────────────
 CLAUDE_API_KEY  = os.getenv("CLAUDE_API_KEY")
@@ -31,19 +35,19 @@ RECENT_POST_DAYS    = 7
 # ── Search Targets (keyword + city pairs) ─────────────────────────────────────
 # Edit this list to target specific markets
 SEARCH_TARGETS = [
-    {"keyword": "restaurant", "city": "Lagos"},
-    {"keyword": "salon",      "city": "Lagos"},
-    {"keyword": "fashion",    "city": "Lagos"},
-    {"keyword": "pharmacy",   "city": "Lagos"},
-    {"keyword": "building materials", "city": "Lagos"},
-    {"keyword": "school",     "city": "Lagos"},
+    {"keyword": "restaurant",         "city": "Abeokuta"},
+    {"keyword": "salon",              "city": "Abeokuta"},
+    {"keyword": "fashion",            "city": "Abeokuta"},
+    {"keyword": "pharmacy",           "city": "Abeokuta"},
+    {"keyword": "building materials", "city": "Abeokuta"},
+    {"keyword": "school",             "city": "Abeokuta"},
 ]
 
 INSTAGRAM_HASHTAGS = [
-    "lagosrestaurant",
-    "lagossalon",
-    "lagosfashion",
-    "lagosbusiness",
+    "abeokutabusiness",
+    "abeokutafashion",
+    "abeokutafood",
+    "abeokutarestaurant",
 ]
 
 # ── Niche Strategies ──────────────────────────────────────────────────────────

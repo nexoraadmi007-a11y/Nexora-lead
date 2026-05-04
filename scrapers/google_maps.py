@@ -23,11 +23,14 @@ def scrape_google_maps(keyword: str, city: str, max_results: int = 40) -> List[D
 
     # City → GPS centre + country override to avoid ambiguous names (e.g. Lagos Portugal vs Nigeria)
     GEO_CENTRES = {
-        "Lagos":       {"lat": 6.5244,  "lng": 3.3792,  "zoom": 12, "country": "Nigeria"},
-        "Abuja":       {"lat": 9.0765,  "lng": 7.3986,  "zoom": 12, "country": "Nigeria"},
-        "Port Harcourt": {"lat": 4.8156, "lng": 7.0498, "zoom": 12, "country": "Nigeria"},
-        "Ibadan":      {"lat": 7.3775,  "lng": 3.9470,  "zoom": 12, "country": "Nigeria"},
-        "Kano":        {"lat": 12.0022, "lng": 8.5920,  "zoom": 12, "country": "Nigeria"},
+        "Lagos":         {"lat": 6.5244,  "lng": 3.3792,  "country": "Nigeria"},
+        "Abuja":         {"lat": 9.0765,  "lng": 7.3986,  "country": "Nigeria"},
+        "Port Harcourt": {"lat": 4.8156,  "lng": 7.0498,  "country": "Nigeria"},
+        "Ibadan":        {"lat": 7.3775,  "lng": 3.9470,  "country": "Nigeria"},
+        "Kano":          {"lat": 12.0022, "lng": 8.5920,  "country": "Nigeria"},
+        "Abeokuta":      {"lat": 7.1475,  "lng": 3.3619,  "country": "Nigeria"},
+        "Benin City":    {"lat": 6.3350,  "lng": 5.6271,  "country": "Nigeria"},
+        "Enugu":         {"lat": 6.4584,  "lng": 7.5464,  "country": "Nigeria"},
     }
     geo = GEO_CENTRES.get(city, {})
     country = geo.get("country", "")
