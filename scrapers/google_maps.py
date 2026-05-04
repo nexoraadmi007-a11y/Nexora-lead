@@ -21,13 +21,31 @@ def scrape_google_maps(keyword: str, city: str, max_results: int = 40) -> List[D
         logger.warning("APIFY_TOKEN not set — returning mock data for testing")
         return _mock_google_leads(keyword, city)
 
+    # City → GPS centre + country override to avoid ambiguous names (e.g. Lagos Portugal vs Nigeria)
+    GEO_CENTRES = {
+        "Lagos":       {"lat": 6.5244,  "lng": 3.3792,  "zoom": 12, "country": "Nigeria"},
+        "Abuja":       {"lat": 9.0765,  "lng": 7.3986,  "zoom": 12, "country": "Nigeria"},
+        "Port Harcourt": {"lat": 4.8156, "lng": 7.0498, "zoom": 12, "country": "Nigeria"},
+        "Ibadan":      {"lat": 7.3775,  "lng": 3.9470,  "zoom": 12, "country": "Nigeria"},
+        "Kano":        {"lat": 12.0022, "lng": 8.5920,  "zoom": 12, "country": "Nigeria"},
+    }
+    geo = GEO_CENTRES.get(city, {})
+    country = geo.get("country", "")
+    search_query = f"{keyword} in {city}{', ' + country if country else ''}"
+
     client = ApifyClient(APIFY_TOKEN)
     run_input = {
-        "searchStringsArray": [f"{keyword} in {city}"],
+        "searchStringsArray": [search_query],
         "maxCrawledPlacesPerSearch": max_results,
         "language": "en",
         "includeWebResults": False,
     }
+    if geo:
+        run_input["customGeolocation"] = {
+            "type": "Point",
+            "coordinates": [geo["lng"], geo["lat"]],
+            "radiusKm": 30,
+        }
 
     logger.info(f"Scraping Google Maps: {keyword} in {city}")
     run = client.actor(GOOGLE_MAPS_ACTOR_ID).call(run_input=run_input)
