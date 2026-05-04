@@ -92,42 +92,28 @@ def start_scheduler():
     from apscheduler.schedulers.asyncio import AsyncIOScheduler
     from config import DAILY_BRIEF_HOUR, CHECKIN_HOUR, NIGHT_REPORT_HOUR
 
-    scheduler = AsyncIOScheduler(timezone="UTC")
+    async def _run():
+        scheduler = AsyncIOScheduler(timezone="UTC")
+        scheduler.add_job(run_daily_lead_cycle, trigger="cron",
+                          hour=DAILY_BRIEF_HOUR, minute=0, id="daily_brief")
+        scheduler.add_job(run_checkin, trigger="cron",
+                          hour=CHECKIN_HOUR, minute=0, id="checkin")
+        scheduler.add_job(run_night_report, trigger="cron",
+                          hour=NIGHT_REPORT_HOUR, minute=0, id="night_report")
+        scheduler.start()
+        logger.info(
+            f"✅ Scheduler LIVE — Brief@{DAILY_BRIEF_HOUR}UTC "
+            f"| Check-in@{CHECKIN_HOUR}UTC "
+            f"| Report@{NIGHT_REPORT_HOUR}UTC (WAT = UTC+1)"
+        )
+        try:
+            while True:
+                await asyncio.sleep(3600)
+        except (KeyboardInterrupt, SystemExit):
+            scheduler.shutdown()
+            logger.info("Scheduler stopped")
 
-    scheduler.add_job(
-        run_daily_lead_cycle,
-        trigger="cron",
-        hour=DAILY_BRIEF_HOUR,
-        minute=0,
-        id="daily_brief",
-    )
-    scheduler.add_job(
-        run_checkin,
-        trigger="cron",
-        hour=CHECKIN_HOUR,
-        minute=0,
-        id="checkin",
-    )
-    scheduler.add_job(
-        run_night_report,
-        trigger="cron",
-        hour=NIGHT_REPORT_HOUR,
-        minute=0,
-        id="night_report",
-    )
-
-    scheduler.start()
-    logger.info(
-        f"Scheduler started — Brief@{DAILY_BRIEF_HOUR}UTC "
-        f"| Check-in@{CHECKIN_HOUR}UTC "
-        f"| Report@{NIGHT_REPORT_HOUR}UTC"
-    )
-
-    try:
-        asyncio.get_event_loop().run_forever()
-    except (KeyboardInterrupt, SystemExit):
-        scheduler.shutdown()
-        logger.info("Scheduler stopped")
+    asyncio.run(_run())
 
 
 # ── Entry Point ───────────────────────────────────────────────────────────────
@@ -140,5 +126,4 @@ if __name__ == "__main__":
     elif "--report" in sys.argv:
         asyncio.run(run_night_report())
     else:
-        # Default: run daily cycle immediately
         asyncio.run(run_daily_lead_cycle())
